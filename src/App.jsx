@@ -56,7 +56,7 @@ const PROJECTS = [
     description: 'A robust full-stack CRUD application for managing employee records securely and efficiently.',
     tech: ['Spring Boot', 'React', 'PostgreSQL'],
     // UPDATED: Use the local image from the public folder
-    image: '/employee-data.jpg',
+    image: '/portfolio/employee-data.jpg',
     links: { demo: '#', code: 'https://github.com/0Naveen2/Employee_Data-spring-react-postgreeSql-' }
   },
   {
@@ -222,7 +222,7 @@ const About = () => {
             <div className="w-full h-80 md:h-96 bg-gradient-to-br from-teal-400 to-blue-600 rounded-2xl transform rotate-3 opacity-75 absolute inset-0 blur-sm"></div>
             {/* UPDATED: Profile Image with adjustment style */}
             <img 
-              src="/profile.jpg" 
+              src="/portfolio/profile.jpg" 
               alt="Profile" 
               className="relative w-full h-80 md:h-96 object-cover rounded-2xl shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform duration-500" 
               style={{ objectPosition: "50% 20%" }} 
@@ -234,7 +234,7 @@ const About = () => {
               Hello! I'm {DATA.name}, a passionate developer with a knack for solving complex problems. I am actively solving problems on LeetCode and building projects on GitHub.
             </p>
             <p className="text-slate-300 text-lg mb-8 leading-relaxed">
-              My core stack involves **Java Spring Boot** for robust APIs and **React** for responsive user interfaces. I focus on writing clean, maintainable code and adhering to modern development practices.
+              My core stack involves Java Spring Boot for robust APIs and React for responsive user interfaces. I focus on writing clean, maintainable code and adhering to modern development practices.
             </p>
             
             <div className="flex flex-wrap gap-4">
