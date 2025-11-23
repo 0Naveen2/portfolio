@@ -4,9 +4,6 @@ import {
   Github, 
   Linkedin, 
   Mail, 
-  ExternalLink, 
-  Code, 
-  Database, 
   Layout, 
   Server, 
   Menu, 
@@ -15,8 +12,10 @@ import {
   Send,
   Terminal,
   Cpu,
-  ScanFace,
-  Phone // Added Phone icon
+  Phone,
+  Code,
+  Database,
+  ExternalLink
 } from 'lucide-react';
 
 // --- Data / Configuration ---
@@ -46,7 +45,6 @@ const PROJECTS = [
     title: 'QP Frontend Backend', 
     description: 'A complete full-stack application handling data flow between client and server, designed for efficient query or paper management.',
     tech: ['React', 'Backend', 'Web Dev'],
-    // Placeholder image for code/web app
     image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800', 
     links: { demo: '#', code: 'https://github.com/0Naveen2/qp-frontend-backend' } 
   },
@@ -55,7 +53,7 @@ const PROJECTS = [
     title: 'Employee Data Management',
     description: 'A robust full-stack CRUD application for managing employee records securely and efficiently.',
     tech: ['Spring Boot', 'React', 'PostgreSQL'],
-    // UPDATED: Use the local image from the public folder
+    // Using the portfolio path for GitHub Pages
     image: '/portfolio/employee-data.jpg',
     links: { demo: '#', code: 'https://github.com/0Naveen2/Employee_Data-spring-react-postgreeSql-' }
   },
@@ -64,7 +62,6 @@ const PROJECTS = [
     title: 'Face Detection System',
     description: 'Advanced computer vision project capable of detecting and distinguishing between known and unknown faces.',
     tech: ['Python', 'OpenCV', 'AI/ML'],
-    // Placeholder image for AI/Face ID
     image: 'https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&q=80&w=800',
     links: { demo: '#', code: 'https://github.com/0Naveen2/Known-and-Unkown-face-detection' }
   }
@@ -82,6 +79,20 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Manual scroll handler for smooth navigation on mobile
+  const handleNavClick = (e, href) => {
+    e.preventDefault();
+    setIsOpen(false);
+    const targetId = href.replace('#', '');
+    const element = document.getElementById(targetId);
+    if (element) {
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+    }
+  };
+
   const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'About', href: '#about' },
@@ -91,57 +102,55 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-slate-900/95 backdrop-blur-md shadow-lg py-4' : 'bg-transparent py-6'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent"
-        >
-          {DATA.name}
-        </motion.div>
-
-        {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-8">
-          {navLinks.map((link, i) => (
-            <motion.a
-              key={link.name}
-              href={link.href}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="text-slate-300 hover:text-teal-400 font-medium transition-colors relative group"
-            >
-              {link.name}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-teal-400 transition-all group-hover:w-full"></span>
-            </motion.a>
-          ))}
+    <>
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-slate-900/95 backdrop-blur-md shadow-lg py-4' : 'bg-transparent py-6'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent relative z-50"
+          >
+            {DATA.name}
+          </motion.div>
+          <div className="hidden md:flex space-x-8">
+            {navLinks.map((link, i) => (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="text-slate-300 hover:text-teal-400 font-medium transition-colors relative group cursor-pointer"
+              >
+                {link.name}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-teal-400 transition-all group-hover:w-full"></span>
+              </a>
+            ))}
+          </div>
+          <div className="md:hidden relative z-50">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-slate-300 hover:text-white p-2">
+              {isOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
         </div>
-
-        {/* Mobile Toggle */}
-        <div className="md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)} className="text-slate-300 hover:text-white">
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
+      </nav>
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-slate-800 border-t border-slate-700 overflow-hidden"
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: "tween", duration: 0.3 }}
+            className="fixed top-0 left-0 w-screen h-screen bg-slate-900 z-[9999] flex flex-col justify-center items-center md:hidden"
           >
-            <div className="px-4 py-6 space-y-4">
+             <button onClick={() => setIsOpen(false)} className="absolute top-6 right-6 text-slate-400 hover:text-white p-2">
+                <X size={32} />
+             </button>
+            <div className="space-y-8 text-center">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="block text-slate-300 hover:text-teal-400 text-lg font-medium"
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  className="block text-3xl font-bold text-slate-300 hover:text-teal-400 transition-colors cursor-pointer"
                 >
                   {link.name}
                 </a>
@@ -150,14 +159,13 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
 };
 
 const Hero = () => {
   return (
     <section id="home" className="min-h-screen flex items-center justify-center bg-slate-900 relative overflow-hidden">
-      {/* Background Blobs */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-3xl animate-pulse" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
 
@@ -176,10 +184,10 @@ const Hero = () => {
             I solve complex problems using Data Structures & Algorithms and build scalable web applications with React & Spring Boot.
           </p>
           
-          <div className="flex justify-center space-x-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a 
               href="#projects"
-              className="px-8 py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-full font-medium transition-transform hover:scale-105 shadow-lg shadow-teal-500/25"
+              className="px-8 py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-full font-medium transition-transform hover:scale-105 shadow-lg shadow-teal-500/25 text-center"
             >
               View Projects
             </a>
@@ -187,7 +195,7 @@ const Hero = () => {
               href={DATA.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-3 border border-slate-600 hover:border-teal-400 text-slate-300 hover:text-teal-400 rounded-full font-medium transition-all flex items-center gap-2"
+              className="px-8 py-3 border border-slate-600 hover:border-teal-400 text-slate-300 hover:text-teal-400 rounded-full font-medium transition-all flex items-center justify-center gap-2"
             >
               <Github size={20} />
               <span>GitHub</span>
@@ -220,7 +228,6 @@ const About = () => {
         >
           <div className="relative">
             <div className="w-full h-80 md:h-96 bg-gradient-to-br from-teal-400 to-blue-600 rounded-2xl transform rotate-3 opacity-75 absolute inset-0 blur-sm"></div>
-            {/* UPDATED: Profile Image with adjustment style */}
             <img 
               src="/portfolio/profile.jpg" 
               alt="Profile" 
@@ -234,7 +241,7 @@ const About = () => {
               Hello! I'm {DATA.name}, a passionate developer with a knack for solving complex problems. I am actively solving problems on LeetCode and building projects on GitHub.
             </p>
             <p className="text-slate-300 text-lg mb-8 leading-relaxed">
-              My core stack involves Java Spring Boot for robust APIs and React for responsive user interfaces. I focus on writing clean, maintainable code and adhering to modern development practices.
+              My core stack involves **Java Spring Boot** for robust APIs and **React** for responsive user interfaces. I focus on writing clean, maintainable code and adhering to modern development practices.
             </p>
             
             <div className="flex flex-wrap gap-4">
@@ -392,7 +399,7 @@ const Projects = () => {
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [status, setStatus] = useState('idle'); // idle, submitting, success, error
+  const [status, setStatus] = useState('idle');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -401,16 +408,12 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('submitting');
-
-    // Simulate backend connection for this demo
-    // In real app: fetch('http://localhost:8080/api/contact', ...)
     try {
       const response = await fetch('http://localhost:8080/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      
       if (response.ok) {
         setStatus('success');
         setFormData({ name: '', email: '', message: '' });
@@ -419,7 +422,6 @@ const Contact = () => {
       }
     } catch (error) {
       console.warn("Backend not running in this environment. Simulating success.");
-      // Fallback for demo purposes
       setTimeout(() => {
         setStatus('success');
         setFormData({ name: '', email: '', message: '' });
@@ -440,7 +442,6 @@ const Contact = () => {
             <h2 className="text-3xl font-bold text-white mb-2">Get In Touch</h2>
             <p className="text-slate-400 mb-6">Have a project in mind or just want to say hi?</p>
             
-            {/* Added Contact Details Here */}
             <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 text-slate-300 mb-6">
               <div className="flex items-center gap-2 p-2 rounded hover:bg-slate-700/50 transition-colors">
                 <Mail size={20} className="text-teal-400" />
